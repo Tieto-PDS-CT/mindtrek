@@ -8,6 +8,8 @@ import java.awt.event.*;
 public class MainClass extends JFrame
 	implements KeyListener, ActionListener {
 	
+	BalloonController balloonController = null;
+	
 	JTextArea displayArea;
     JTextField typingArea;
     static final String newline = System.getProperty("line.separator");
@@ -17,6 +19,7 @@ public class MainClass extends JFrame
     
     public MainClass(String name) {
 		super(name);
+		this.balloonController = new BalloonController();
 	}
 
 	/**
@@ -81,20 +84,28 @@ public class MainClass extends JFrame
     		// displayInfo(e, "KEY PRESSED: ");
     		
     		if (e.getKeyCode() == KeyEvent.VK_UP){
+    			this.balloonController.goForward();
     			debugPrint("Forward!");
     		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+    			this.balloonController.goBackward();
     			debugPrint("Backward!");
     		} else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+    			this.balloonController.turnLeft();
     			debugPrint("Turn left!");
     		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+    			this.balloonController.turnRight();
     			debugPrint("Turn right!");
     		} else if (e.getKeyCode() == KeyEvent.VK_1){
+    			this.balloonController.goUp(1);
     			debugPrint("1 Step more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_2){
+    			this.balloonController.goUp(2);
 				debugPrint("2 Steps more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_3){
+    			this.balloonController.goUp(3);
 				debugPrint("3 Steps more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_4){
+    			this.balloonController.goUp(4);
 				debugPrint("4 Steps more height!");
 			}
 		}
