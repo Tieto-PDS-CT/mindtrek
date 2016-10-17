@@ -24,6 +24,11 @@ public class BalloonController
 		this.mqttConnector = new MqttConnector();
 	}
 	
+    public MqttConnector getMqttConnector(){
+        return this.mqttConnector;
+    }
+
+	
 	private String getBalloonCommand(int motor1, int motor2, int upMotor, int time)
 	{
 		int commandId = this.getCommandId();

@@ -16,10 +16,16 @@ public class MqttConnector implements MqttCallback
     private static final String		READ_TOPIC		= "team8_read";
 
     private MqttClient sampleClient = null;
-	
-	public MqttConnector()
-	{
-		this.connect();
+    private ITietoMqttListener mqttListener = null;
+
+
+    public MqttConnector()
+    {
+        this.connect();
+    }
+
+    public void setListener(ITietoMqttListener listener){
+        mqttListener = listener;
 	}
 	
 	public boolean connect()
@@ -100,27 +106,29 @@ public class MqttConnector implements MqttCallback
 	    }
 	    
 	    return result;
-	} 
+	}
 
-	@Override
-	public void connectionLost(Throwable throwable) 
-	{
+    @Override
+    public void connectionLost(Throwable throwable) 
+    {
         System.out.println("msg " + throwable.getMessage());
         System.out.println("loc " + throwable.getLocalizedMessage());
         System.out.println("cause " + throwable.getCause());
         System.out.println("excep " + throwable);
         throwable.printStackTrace();
-		
-	}
 
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken token) {
+    }
+
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken token) {
         System.out.println("Delivery complete.");
-	}
+    }
 
-	@Override
-	public void messageArrived(String topic, MqttMessage message) throws Exception {
-		System.out.println(message);  
-		
-	}
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        if (mqttListener != null){
+            mqttListener.mqttDataReceived(message.toString()); 
+        }
+
+    }
 }

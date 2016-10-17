@@ -1,17 +1,23 @@
 package com.tieto.mindtrek.balloon;
 
 import javax.swing.*; 
+import javax.json.*;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.*;
+import java.io.StringReader;
 
 public class MainClass extends JFrame
-    implements KeyListener, ActionListener {
+    implements KeyListener, ActionListener, ITietoMqttListener {
 
-	BalloonController balloonController = null;
-	
-    JTextArea debug1DisplayArea;
-    JTextArea debug2DisplayArea;
+    BalloonController balloonController = null;
+
+    JTextArea debug1DisplayArea; // Navigation commands
+    JTextArea debug2DisplayArea; // MQTT responses
+    JTextArea debug3DisplayArea; // Compass data
+    JTextArea debug4DisplayArea; // Beacon data
     JTextField typingArea;
     static final String newline = System.getProperty("line.separator");
 
@@ -60,11 +66,29 @@ public class MainClass extends JFrame
         debug2DisplayArea.setEditable(false);
         JScrollPane scrollPane2 = new JScrollPane(debug2DisplayArea);
         scrollPane2.setPreferredSize(new Dimension(800, 125));
+        
+        debug3DisplayArea = new JTextArea();
+        debug3DisplayArea.setEditable(false);
+        JScrollPane scrollPane3 = new JScrollPane(debug3DisplayArea);
+        scrollPane3.setPreferredSize(new Dimension(300, 125));
+        
+        debug4DisplayArea = new JTextArea();
+        debug4DisplayArea.setEditable(false);
+        JScrollPane scrollPane4 = new JScrollPane(debug4DisplayArea);
+        scrollPane4.setPreferredSize(new Dimension(300, 125));
 
-        getContentPane().add(typingArea, BorderLayout.PAGE_START);
-        getContentPane().add(scrollPane, BorderLayout.LINE_START);
-        getContentPane().add(scrollPane2, BorderLayout.LINE_END);
-        getContentPane().add(button, BorderLayout.PAGE_END);
+        GridLayout layout = new GridLayout(0,2);
+        
+        getContentPane().setLayout(layout);
+        
+        getContentPane().add(typingArea);
+        getContentPane().add(scrollPane);
+        getContentPane().add(scrollPane2);
+        getContentPane().add(scrollPane3);
+        getContentPane().add(scrollPane4);
+        getContentPane().add(button);
+        
+        balloonController.getMqttConnector().setListener(this);
     }
     
     /** Handle the key typed event from the text field. */
@@ -73,21 +97,29 @@ public class MainClass extends JFrame
     }
      
     /**
-     * Prints to the left debug pane on application window, and to console output.
-     * Meant for input keys and other "slow" debug output.
+     * Prints to the first debug window.
      */
     public void debugPrint1(String message){
-        System.out.print(message);
+        System.out.print(message + "\n");
         debug1DisplayArea.append(message + newline);
     }
     
     /**
-     * Prints to the rigth (wider) debug pane on the application window, and to console output.
-     * Meant for MQTT traffic and other "fast" debug output.
+     * Prints to the second debug window.
      */
     public void debugPrint2(String message){
-        System.out.print(message);
+        System.out.print(message + "\n");
         debug2DisplayArea.append(message + newline);
+    }
+    
+    public void debugPrint3(String message){
+        System.out.print(message + "\n");
+        debug3DisplayArea.append(message + newline);
+    }
+    
+    public void debugPrint4(String message){
+        System.out.print(message + "\n");
+        debug4DisplayArea.append(message + newline);
     }
     
     /** Handle the key pressed event from the text field. */
@@ -119,6 +151,10 @@ public class MainClass extends JFrame
             } else if (e.getKeyCode() == KeyEvent.VK_4){
                 this.balloonController.goUp(4);
                 debugPrint1("4 Steps more height!");
+            } else if (e.getKeyCode() == KeyEvent.VK_D){
+                // For debugging off-line: Pressing 'D' generates some received data.
+                String tmp = "{\"baddr\" : \"10:5C:1E:6C:69:73\", \"rssi\" : \"-89\", \"time_to_go\" : \"0\", \"command_id\" : \"0\", \"x\" : \"114\", \"y\" : \"15\", \"z\" : \"-86\"}";
+                mqttDataReceived(tmp);
             }
         }
      }
@@ -135,6 +171,8 @@ public class MainClass extends JFrame
         //Clear the text components.
         debug1DisplayArea.setText("");
         debug2DisplayArea.setText("");
+        debug3DisplayArea.setText("");
+        debug4DisplayArea.setText("");
         typingArea.setText("");
          
         //Return the focus to the typing area.
@@ -202,6 +240,30 @@ public class MainClass extends JFrame
                 createAndShowGUI();
             }
         });
+    }
+
+    @Override
+    public void mqttDataReceived(String data) {
+        debugPrint2(data);
+ 
+        JsonReader jsonReader = Json.createReader(new StringReader(data));
+
+        JsonObject object = jsonReader.readObject();
+
+        String btId = object.getString("baddr");
+        int btRssi = Integer.parseInt(object.getString("rssi"));
+
+        // To-do: Handling of Bluetooth beacon data here
+        debugPrint3("Bt id: " + btId + " has signal strength " + btRssi + "dB");
+
+        int compassX = Integer.parseInt(object.getString("x"));
+        int compassY = Integer.parseInt(object.getString("y"));
+        int compassZ = Integer.parseInt(object.getString("z"));
+
+        // To-do: Handling / filtering of compass data here
+        debugPrint4("Compass x, y, z are :" + compassX + ", " + compassY + ", " + compassZ);
+
+        jsonReader.close();
     }
 }
 
