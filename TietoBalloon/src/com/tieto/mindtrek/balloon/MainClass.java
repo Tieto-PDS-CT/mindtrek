@@ -66,40 +66,45 @@ public class MainClass extends JFrame
     
     /** Handle the key typed event from the text field. */
     public void keyTyped(KeyEvent e) {
-        displayInfo(e, "KEY TYPED: ");
+        // displayInfo(e, "KEY TYPED: ");
     }
      
+    public void debugPrint(String message){
+    	System.out.print(message);
+    	displayArea.append(message + newline);
+    }
+    
     /** Handle the key pressed event from the text field. */
     public void keyPressed(KeyEvent e) {
     	if (!keyDown){
     		keyDown = true;
-    		displayInfo(e, "KEY PRESSED: ");
+    		// displayInfo(e, "KEY PRESSED: ");
     		
     		if (e.getKeyCode() == KeyEvent.VK_UP){
-    			System.out.print("Forward!");
+    			debugPrint("Forward!");
     		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-    			System.out.print("Backward!");
+    			debugPrint("Backward!");
     		} else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-    			System.out.print("Turn left!");
+    			debugPrint("Turn left!");
     		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-    			System.out.print("Turn right!");
+    			debugPrint("Turn right!");
     		} else if (e.getKeyCode() == KeyEvent.VK_1){
-    			System.out.print("1 Step more height!");
+    			debugPrint("1 Step more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_2){
-				System.out.print("2 Steps more height!");
+				debugPrint("2 Steps more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_3){
-				System.out.print("3 Steps more height!");
+				debugPrint("3 Steps more height!");
 			} else if (e.getKeyCode() == KeyEvent.VK_4){
-				System.out.print("4 Steps more height!");
+				debugPrint("4 Steps more height!");
 			}
-			}
-    	}
+		}
+	}
     
      
     /** Handle the key released event from the text field. */
     public void keyReleased(KeyEvent e) {
     	keyDown = false;
-        displayInfo(e, "KEY RELEASED: ");
+        // displayInfo(e, "KEY RELEASED: ");
     }
      
     /** Handle the button click. */
