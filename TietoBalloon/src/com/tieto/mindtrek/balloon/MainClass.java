@@ -13,7 +13,7 @@ public class MainClass extends JFrame
 	JTextArea displayArea;
     JTextField typingArea;
     static final String newline = System.getProperty("line.separator");
-	
+
     // For filtering
     boolean keyDown = false;
     
@@ -73,8 +73,8 @@ public class MainClass extends JFrame
     }
      
     public void debugPrint(String message){
-    	System.out.print(message);
-    	displayArea.append(message + newline);
+        System.out.print(message);
+        displayArea.append(message + newline);
     }
     
     /** Handle the key pressed event from the text field. */
@@ -114,7 +114,7 @@ public class MainClass extends JFrame
      
     /** Handle the key released event from the text field. */
     public void keyReleased(KeyEvent e) {
-    	keyDown = false;
+        keyDown = false;
         // displayInfo(e, "KEY RELEASED: ");
     }
      
