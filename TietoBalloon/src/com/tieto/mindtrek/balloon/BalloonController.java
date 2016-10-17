@@ -29,7 +29,7 @@ public class BalloonController
 		int commandId = this.getCommandId();
 		String command = String.format(BalloonController.BALLOON_COMMAND, motor1, motor2, upMotor, time, commandId);
 		return command;
-	}
+	} 
 	
 	public boolean goUp(int speed)
 	{
@@ -58,7 +58,7 @@ public class BalloonController
 	public boolean turnRight()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_BACKWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_FORWARD, 0, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;		
 	}
@@ -66,7 +66,7 @@ public class BalloonController
 	public boolean turnLeft()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_FORWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_BACKWARD, 0, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;		
 	}

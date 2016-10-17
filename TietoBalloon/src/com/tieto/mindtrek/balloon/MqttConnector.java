@@ -37,6 +37,7 @@ public class MqttConnector implements MqttCallback
 	        sampleClient.connect(connOpts);
 	        System.out.println("Connected");
 	        sampleClient.subscribe(MqttConnector.READ_TOPIC);
+	        sampleClient.setCallback(this);
 	    } 
 	    catch(MqttException me) 
 	    {
@@ -99,7 +100,7 @@ public class MqttConnector implements MqttCallback
 	    }
 	    
 	    return result;
-	}
+	} 
 
 	@Override
 	public void connectionLost(Throwable throwable) 
