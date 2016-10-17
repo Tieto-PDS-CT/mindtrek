@@ -6,18 +6,18 @@ import java.awt.Dimension;
 import java.awt.event.*;
 
 public class MainClass extends JFrame
-	implements KeyListener, ActionListener {
-	
-	JTextArea displayArea;
+    implements KeyListener, ActionListener {
+
+    JTextArea displayArea;
     JTextField typingArea;
     static final String newline = System.getProperty("line.separator");
-	
+
     // For filtering
     boolean keyDown = false;
     
     public MainClass(String name) {
-		super(name);
-	}
+        super(name);
+    }
 
 	/**
      * Create the GUI and show it.  For thread safety,
@@ -70,40 +70,40 @@ public class MainClass extends JFrame
     }
      
     public void debugPrint(String message){
-    	System.out.print(message);
-    	displayArea.append(message + newline);
+        System.out.print(message);
+        displayArea.append(message + newline);
     }
     
     /** Handle the key pressed event from the text field. */
     public void keyPressed(KeyEvent e) {
-    	if (!keyDown){
-    		keyDown = true;
-    		// displayInfo(e, "KEY PRESSED: ");
-    		
-    		if (e.getKeyCode() == KeyEvent.VK_UP){
-    			debugPrint("Forward!");
-    		} else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-    			debugPrint("Backward!");
-    		} else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-    			debugPrint("Turn left!");
-    		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-    			debugPrint("Turn right!");
-    		} else if (e.getKeyCode() == KeyEvent.VK_1){
-    			debugPrint("1 Step more height!");
-			} else if (e.getKeyCode() == KeyEvent.VK_2){
-				debugPrint("2 Steps more height!");
-			} else if (e.getKeyCode() == KeyEvent.VK_3){
-				debugPrint("3 Steps more height!");
-			} else if (e.getKeyCode() == KeyEvent.VK_4){
-				debugPrint("4 Steps more height!");
-			}
-		}
-	}
+        if (!keyDown){
+            keyDown = true;
+            // displayInfo(e, "KEY PRESSED: ");
+    
+            if (e.getKeyCode() == KeyEvent.VK_UP){
+                debugPrint("Forward!");
+            } else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                debugPrint("Backward!");
+            } else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                debugPrint("Turn left!");
+            } else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+                debugPrint("Turn right!");
+            } else if (e.getKeyCode() == KeyEvent.VK_1){
+                debugPrint("1 Step more height!");
+            } else if (e.getKeyCode() == KeyEvent.VK_2){
+                debugPrint("2 Steps more height!");
+            } else if (e.getKeyCode() == KeyEvent.VK_3){
+                debugPrint("3 Steps more height!");
+            } else if (e.getKeyCode() == KeyEvent.VK_4){
+                debugPrint("4 Steps more height!");
+            }
+        }
+     }
     
      
     /** Handle the key released event from the text field. */
     public void keyReleased(KeyEvent e) {
-    	keyDown = false;
+        keyDown = false;
         // displayInfo(e, "KEY RELEASED: ");
     }
      
