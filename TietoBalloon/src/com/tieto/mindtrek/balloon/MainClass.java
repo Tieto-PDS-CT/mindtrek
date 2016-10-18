@@ -3,11 +3,15 @@ package com.tieto.mindtrek.balloon;
 import javax.swing.*; 
 import javax.json.*;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainClass extends JFrame
     implements KeyListener, ActionListener, ITietoMqttListener {
@@ -20,6 +24,8 @@ public class MainClass extends JFrame
     JTextArea debug4DisplayArea; // Beacon data
     JTextField typingArea;
     static final String newline = System.getProperty("line.separator");
+    
+    private final Map<String,Integer> beaconStrengthMap = new HashMap<>();
 
     // For filtering
     boolean keyDown = false;
@@ -252,9 +258,8 @@ public class MainClass extends JFrame
 
         String btId = object.getString("baddr");
         int btRssi = Integer.parseInt(object.getString("rssi"));
-
-        // To-do: Handling of Bluetooth beacon data here
-        debugPrint3("Bt id: " + btId + " has signal strength " + btRssi + "dB");
+        
+        setBeaconData(btId, btRssi);
 
         int compassX = Integer.parseInt(object.getString("x"));
         int compassY = Integer.parseInt(object.getString("y"));
@@ -264,6 +269,22 @@ public class MainClass extends JFrame
         debugPrint4("Compass x, y, z are :" + compassX + ", " + compassY + ", " + compassZ);
 
         jsonReader.close();
+    }
+    
+    public void setBeaconData(String btId, int btRssi) {
+        beaconStrengthMap.put(btId, btRssi);
+        printBeaconData();
+    }
+    
+    public int getBeaconStrength(String btId) {
+        return beaconStrengthMap.get(btId);
+    }
+    
+    private void printBeaconData() {
+        for (Map.Entry<String,Integer> beacon : beaconStrengthMap.entrySet()) {
+            debugPrint3("Bt id: " + beacon.getKey() + " has signal strength: " + beacon.getValue() + "dB");
+        }
+        
     }
 }
 
