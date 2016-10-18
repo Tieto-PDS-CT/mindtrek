@@ -21,9 +21,17 @@ public class MainClass extends JFrame
     Boolean autopilotOn = false;
     JButton autopilotButton = null;
     
-    double[] headings = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
-    int headingIndex = 0;
-
+    int FILTERSIZE = 30;
+    
+    int[] compassXElements = new int[FILTERSIZE];
+    int[] compassYElements = new int[FILTERSIZE];
+    int compassIndex = 0;
+    
+    int minX = 1000;
+    int minY = 1000;
+    int maxX = -1000;
+    int maxY = -1000;
+    
     JTextArea debug1DisplayArea; // Navigation commands
     JTextArea debug2DisplayArea; // MQTT responses
     JTextArea debug3DisplayArea; // Compass data
@@ -323,31 +331,73 @@ public class MainClass extends JFrame
             debugPrint3("Bt id: " + beacon.getKey() + " has signal strength: " + beacon.getValue() + "dB");
         }
     }
- 
-    private void handleCompassData(int x, int y, int z){
+    
+    private double calculateHeading(float x, float y){
         double heading = 0.0f;
-        
-        float xFloat = x;
-        float yFloat = y;
-                
-        heading  = Math.toDegrees(Math.atan2(yFloat, xFloat));
+        heading  = Math.toDegrees(Math.atan2(y, x));
         
         while (heading < 0){
             heading += 360;
         }
         
+        return heading;
+    }
+ 
+    private void handleCompassData(int x, int y, int z){
+        
+        y=y+12;
+        x=x-8;
+        
+        // #1 First method: Straighforward calculation based on latest x, y values.
+        double heading  = calculateHeading(x, y);
+        
         debug4DisplayArea.setText("");
         debugPrint4("Compass heading is " + Math.round(heading) + ", X = " + x + ", Y= " + y);
         
-        headings[headingIndex] = heading;
-        headingIndex = (headingIndex + 1) % 5;
+        // #2 Second method: Storing of x and y values and using median ones.
+        compassXElements[compassIndex] = x;
+        compassYElements[compassIndex] = y;
         
-        double[] tmpArray = new double[5];
-        System.arraycopy(headings, 0, tmpArray, 0, 5);
+        compassIndex = (compassIndex + 1) % 5;
+        
+        int[] tmpArray = new int[FILTERSIZE];
+        System.arraycopy(compassXElements, 0, tmpArray, 0, FILTERSIZE);
         Arrays.sort(tmpArray);
+        int medianX = tmpArray[FILTERSIZE/2];
         
-        double medianHeading = tmpArray[2];
-        debugPrint4("Median compass heading is " + Math.round(medianHeading));
+        System.arraycopy(compassYElements, 0, tmpArray, 0, FILTERSIZE);
+        Arrays.sort(tmpArray);
+        int medianY = tmpArray[FILTERSIZE/2];
+        
+        double medianHeading = calculateHeading(x, y);
+        
+        debugPrint4("Median compass heading is " + Math.round(medianHeading) + " Median X = " + medianX + ", medianY = " + medianY);
+        
+        // #3 Third method: Calculating an average of all stored values.
+        int xTotal = 0;
+        int yTotal = 0;
+        for (int i=0; i < FILTERSIZE; i++){
+            xTotal += compassXElements[i];
+            yTotal += compassYElements[i];
+        }
+        
+        int averageX = xTotal / FILTERSIZE;
+        int averageY = yTotal / FILTERSIZE;
+        
+        double averageHeading = calculateHeading(averageX, averageY);
+        debugPrint4("Average compass heading is " + Math.round(averageHeading) + " Average X = " + averageX + ", Average Y = " + averageY);
+        
+        // For calibration: Store and display largest and smallest x and Y values.
+        if (averageX < minX)
+            minX = averageX;
+        if (averageX > maxX)
+            maxX = averageX;
+        if (averageY > maxY)
+            maxY = averageY;
+        if (averageY < minY)
+            minY = averageY;
+        
+        debugPrint4("MinX: " + minX + ", maxX: " + maxX + " minY: " + minY + " maxY: " + maxY);
     }
 }
 
