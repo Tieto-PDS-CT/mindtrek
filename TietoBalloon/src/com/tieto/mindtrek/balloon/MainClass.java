@@ -17,6 +17,8 @@ public class MainClass extends JFrame
     implements KeyListener, ActionListener, ITietoMqttListener {
 
     BalloonController balloonController = null;
+    Boolean autopilotOn = false;
+    JButton autopilotButton = null;
 
     JTextArea debug1DisplayArea; // Navigation commands
     JTextArea debug2DisplayArea; // MQTT responses
@@ -47,20 +49,33 @@ public class MainClass extends JFrame
         frame.setVisible(true);    
     }
     
+    private void updatAutopilotText(){
+        if (autopilotOn){
+            autopilotButton.setText("Turn Autopilot OFF");
+        } else {
+            autopilotButton.setText("Turn Autopilot ON");
+        }
+    }
+    
     private void addComponentsToPane() {
         
-        JButton button = new JButton("Clear");
-        button.addActionListener(this);
+        JButton button1 = new JButton("Clear");
+        button1.setActionCommand("clear");
+        button1.addActionListener(this);        
+ 
+        JButton button2 = new JButton();
+        button2.addActionListener(this);
+        button2.setActionCommand("autopilot");
+        autopilotButton = button2;
+        updatAutopilotText();
+        
+        JButton button3 = new JButton("Disconnect");
+        button3.setActionCommand("disconnect");
+        button3.addActionListener(this);   
          
         typingArea = new JTextField(20);
         typingArea.addKeyListener(this);
          
-        //Uncomment this if you wish to turn off focus
-        //traversal.  The focus subsystem consumes
-        //focus traversal keys, such as Tab and Shift Tab.
-        //If you uncomment the following line of code, this
-        //disables focus traversal and the Tab events will
-        //become available to the key event listener.
         //typingArea.setFocusTraversalKeysEnabled(false);
          
         debug1DisplayArea = new JTextArea();
@@ -92,7 +107,9 @@ public class MainClass extends JFrame
         getContentPane().add(scrollPane2);
         getContentPane().add(scrollPane3);
         getContentPane().add(scrollPane4);
-        getContentPane().add(button);
+        getContentPane().add(button1);
+        getContentPane().add(button2);
+        getContentPane().add(button3);
         
         balloonController.getMqttConnector().setListener(this);
     }
@@ -174,15 +191,28 @@ public class MainClass extends JFrame
      
     /** Handle the button click. */
     public void actionPerformed(ActionEvent e) {
-        //Clear the text components.
-        debug1DisplayArea.setText("");
-        debug2DisplayArea.setText("");
-        debug3DisplayArea.setText("");
-        debug4DisplayArea.setText("");
-        typingArea.setText("");
-         
-        //Return the focus to the typing area.
-        typingArea.requestFocusInWindow();
+        
+        String command  = e.getActionCommand();
+                
+        if (command == "clear"){
+            //Clear the text components.
+            debug1DisplayArea.setText("");
+            debug2DisplayArea.setText("");
+            debug3DisplayArea.setText("");
+            debug4DisplayArea.setText("");
+            typingArea.setText("");
+             
+            //Return the focus to the typing area.
+            typingArea.requestFocusInWindow();
+            
+        } else if (command == "autopilot"){
+            autopilotOn = !autopilotOn;
+            updatAutopilotText();
+            
+            // To-Do: Start and stop autopilot here
+        } else if (command == "disconnect"){
+            balloonController.getMqttConnector().disconnect();
+        }
     }
     
     private void displayInfo(KeyEvent e, String keyStatus){
