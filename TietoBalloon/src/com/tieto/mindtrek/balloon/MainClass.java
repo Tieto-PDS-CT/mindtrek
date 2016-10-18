@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -19,6 +20,9 @@ public class MainClass extends JFrame
     BalloonController balloonController = null;
     Boolean autopilotOn = false;
     JButton autopilotButton = null;
+    
+    double[] headings = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
+    int headingIndex = 0;
 
     JTextArea debug1DisplayArea; // Navigation commands
     JTextArea debug2DisplayArea; // MQTT responses
@@ -333,7 +337,17 @@ public class MainClass extends JFrame
         }
         
         debug4DisplayArea.setText("");
-        debugPrint4("Compass heading is " + Math.round(heading));
+        debugPrint4("Compass heading is " + Math.round(heading) + ", X = " + x + ", Y= " + y);
+        
+        headings[headingIndex] = heading;
+        headingIndex = (headingIndex + 1) % 5;
+        
+        double[] tmpArray = new double[5];
+        System.arraycopy(headings, 0, tmpArray, 0, 5);
+        Arrays.sort(tmpArray);
+        
+        double medianHeading = tmpArray[2];
+        debugPrint4("Median compass heading is " + Math.round(medianHeading));
     }
 }
 
