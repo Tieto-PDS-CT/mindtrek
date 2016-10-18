@@ -10,7 +10,7 @@ public class BalloonController
 	private static final int SIDE_MOTOR_FORWARD = 1;
 	private static final int SIDE_MOTOR_BACKWARD = 2;
 	
-	private static final int UP_MOTOR_STANDARD_SPEED = 2;
+	private static final int UP_MOTOR_STANDARD_SPEED = 3;
 	
 	private static final int FORWARD_BACKWARD_TIME = 25;
 	private static final int TURN_TIME = 15;

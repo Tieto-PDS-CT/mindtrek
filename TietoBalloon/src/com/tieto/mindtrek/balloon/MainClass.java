@@ -161,6 +161,9 @@ public class MainClass extends JFrame
                 // For debugging off-line: Pressing 'D' generates some received data.
                 String tmp = "{\"baddr\" : \"10:5C:1E:6C:69:73\", \"rssi\" : \"-89\", \"time_to_go\" : \"0\", \"command_id\" : \"0\", \"x\" : \"114\", \"y\" : \"15\", \"z\" : \"-86\"}";
                 mqttDataReceived(tmp);
+            } else if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                this.balloonController.goUp(3);
+                debugPrint1("3 Steps more height!");
             }
         }
      }
