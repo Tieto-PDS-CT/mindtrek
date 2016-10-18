@@ -116,6 +116,7 @@ public class MqttConnector implements MqttCallback
         System.out.println("cause " + throwable.getCause());
         System.out.println("excep " + throwable);
         throwable.printStackTrace();
+        connect();
 
     }
 
