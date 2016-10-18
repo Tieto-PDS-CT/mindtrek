@@ -10,6 +10,8 @@ public class BalloonController
 	private static final int SIDE_MOTOR_FORWARD = 1;
 	private static final int SIDE_MOTOR_BACKWARD = 2;
 	
+	private static final int UP_MOTOR_STANDARD_SPEED = 1;
+	
 	private static final int TIME = 50;
 	
 	private int commandId = 0;
@@ -47,7 +49,7 @@ public class BalloonController
 	public boolean goForward()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_FORWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_FORWARD, BalloonController.UP_MOTOR_STANDARD_SPEED, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;
 	}
@@ -55,7 +57,7 @@ public class BalloonController
 	public boolean goBackward()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_BACKWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.UP_MOTOR_STANDARD_SPEED, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;
 	}
@@ -63,7 +65,7 @@ public class BalloonController
 	public boolean turnRight()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_FORWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.SIDE_MOTOR_FORWARD, BalloonController.UP_MOTOR_STANDARD_SPEED, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;		
 	}
@@ -71,7 +73,7 @@ public class BalloonController
 	public boolean turnLeft()
 	{
 		boolean result = true;
-		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_BACKWARD, 0, BalloonController.TIME);
+		String command = this.getBalloonCommand(BalloonController.SIDE_MOTOR_FORWARD, BalloonController.SIDE_MOTOR_BACKWARD, BalloonController.UP_MOTOR_STANDARD_SPEED, BalloonController.TIME);
 		result = this.mqttConnector.write(command);
 		return result;		
 	}
