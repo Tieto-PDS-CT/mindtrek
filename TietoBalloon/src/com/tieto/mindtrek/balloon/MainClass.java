@@ -299,7 +299,7 @@ public class MainClass extends JFrame
         compassXElements[compassIndex] = x;
         compassYElements[compassIndex] = y;
         
-        compassIndex = (compassIndex + 1) % 5;
+        compassIndex = (compassIndex + 1) % FILTERSIZE;
         
         int[] tmpArray = new int[FILTERSIZE];
         System.arraycopy(compassXElements, 0, tmpArray, 0, FILTERSIZE);
