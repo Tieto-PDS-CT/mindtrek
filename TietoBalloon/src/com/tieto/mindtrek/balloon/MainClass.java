@@ -265,8 +265,7 @@ public class MainClass extends JFrame
         int compassY = Integer.parseInt(object.getString("y"));
         int compassZ = Integer.parseInt(object.getString("z"));
 
-        // To-do: Handling / filtering of compass data here
-        debugPrint4("Compass x, y, z are :" + compassX + ", " + compassY + ", " + compassZ);
+        handleCompassData(compassX, compassY, compassZ);
 
         jsonReader.close();
     }
@@ -281,10 +280,27 @@ public class MainClass extends JFrame
     }
     
     private void printBeaconData() {
+        debug3DisplayArea.setText("");
+
         for (Map.Entry<String,Integer> beacon : beaconStrengthMap.entrySet()) {
             debugPrint3("Bt id: " + beacon.getKey() + " has signal strength: " + beacon.getValue() + "dB");
         }
+    }
+ 
+    private void handleCompassData(int x, int y, int z){
+        double heading = 0.0f;
         
+        float xFloat = x;
+        float yFloat = y;
+                
+        heading  = Math.toDegrees(Math.atan2(yFloat, xFloat));
+        
+        while (heading < 0){
+            heading += 360;
+        }
+        
+        debug4DisplayArea.setText("");
+        debugPrint4("Compass heading is " + Math.round(heading));
     }
 }
 
